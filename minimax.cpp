@@ -52,11 +52,9 @@ int Minimax::is_end_state(std::vector<std::vector<int>>& b) {
 int Minimax::getBestMove(std::vector<std::vector<int>>& board, bool is_maximizer, int depth, int loc_score, int alpha, int beta) {
 	if(is_maximizer) {
 		loc_score = -inf;
-		alpha = -inf;
 	}
 	else {
 		loc_score = inf;
-		beta = inf;
 	}
 	int end = is_end_state(board);
 
@@ -64,12 +62,13 @@ int Minimax::getBestMove(std::vector<std::vector<int>>& board, bool is_maximizer
 	if(end==2) return 1;
 	if(end==3) return 0;
 
-	for(int i=0;i<3;i++) {
-		for(int j=0;j<3;j++) {
-			if(board[i][j]!=0) continue;
-			
-			if(is_maximizer) {
-				board[i][j]=2;
+
+	if(is_maximizer) {
+		for(int i=0;i<3;i++) {
+			for(int j=0;j<3;j++) {
+				if(board[i][j]!=0) continue;
+
+				board[i][j] = 2;
 				int child_score = getBestMove(board, !is_maximizer, depth+1, loc_score, alpha, beta);
 
 				if(depth==0 && child_score>loc_score) {
@@ -79,16 +78,31 @@ int Minimax::getBestMove(std::vector<std::vector<int>>& board, bool is_maximizer
 				else if(depth!=0 && child_score>loc_score) {
 					loc_score = child_score;
 				}
-			}
-			else {
-				board[i][j]=1;
-				int child_score = getBestMove(board, !is_maximizer, depth+1, loc_score, alpha, beta);
-				loc_score = std::min(loc_score, child_score);
-			}
+				board[i][j] = 0;
 
-			board[i][j]=0;
+				alpha = std::max(alpha, loc_score);
+				if(beta<=alpha) break;
+			}
 		}
+
+		return loc_score;
 	}
 
-	return loc_score;
+	else {
+		for(int i=0;i<3;i++) {
+			for(int j=0;j<3;j++) {
+				if(board[i][j]!=0) continue;
+
+				board[i][j] = 1;
+				int child_score = getBestMove(board, !is_maximizer, depth+1, loc_score, alpha, beta);
+				loc_score = std::min(loc_score, child_score);
+				board[i][j] = 0;
+				beta = std::min(beta, loc_score);
+				if(beta<=alpha) break;
+			}
+		}
+
+		return loc_score;
+
+	}
 }

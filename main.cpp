@@ -3,6 +3,8 @@
 
 using namespace std;
 
+const int inf = 1e9+7;
+
 /*
 
 Defining the flow:-
@@ -18,6 +20,7 @@ Defining the flow:-
 5. Turn goes back to human and the cycle continues until an end state is reached (win/loss/draw).
 
 */
+
 void tutorial() {
 	cout<<"Make moves by entering 2 space separated integers."<<"\n";
 	cout<<"Example: 1 1 means row 1 column 1"<<"\n";
@@ -62,7 +65,6 @@ vector<vector<int>> make_move_human(vector<vector<int>> board) {
 	board[row-1][col-1] = 1;
 
 	print_board(board);
-	//sleep(2);
 
 	return board;
 }
@@ -79,7 +81,12 @@ int main() {
 
 	while(!finished) {
 		board = make_move_human(game.state);
-		int score = game.getBestMove(board, true, 0, 0);
+		int score = game.getBestMove(board, true, 0, 0, -inf, inf);
+
+		if(score==0) {
+			finished = game.is_end_state(board);
+			if(finished!=0) continue;
+		}
 		board = game.best_next_state;
 		cout<<"Thinking... "<<'\n';
 		sleep(1);

@@ -12,7 +12,7 @@ public:
 
 	Minimax(std::vector<std::vector<int>> state_loc);
 	int is_end_state(std::vector<std::vector<int>>& b);
-	int getBestMove(std::vector<std::vector<int>>& board, bool is_maximizer, int depth, int loc_score);
+	int getBestMove(std::vector<std::vector<int>>& board, bool is_maximizer, int depth, int loc_score, int alpha, int beta);
 
 };
 
